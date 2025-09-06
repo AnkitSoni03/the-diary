@@ -12,13 +12,22 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import "react-quill-new/dist/quill.snow.css";
-import { createArticles } from "@/actions/create-article";
+import { Articles } from "@prisma/client";
+import Image from "next/image";
+import { updateArticles } from "@/actions/update-article";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-function CreateArticlePage() {
-  const [content, setContent] = useState("");
-  const [formState, action, isPending] = useActionState(createArticles, { errors: {} });
+type EditPropsPage = {
+  article: Articles;
+};
+
+function EditArticlePage({ article }: EditPropsPage) {
+  const [content, setContent] = useState(article.content);
+  const [formState, action, isPending] = useActionState(
+    updateArticles.bind(null, article.id),
+    { errors: {} }
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,11 +46,9 @@ function CreateArticlePage() {
     <div className="max-w-3xl mx-auto py-10 px-6">
       <Card className="shadow-lg border rounded-2xl">
         <CardHeader className="pb-2">
-          <CardTitle className="text-2xl font-semibold">
-            ✍️ Create New Article
-          </CardTitle>
+          <CardTitle className="text-2xl font-semibold">✍️ Edit Article</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Fill in the details below to publish your article.
+            Update the details below and publish changes.
           </p>
         </CardHeader>
 
@@ -50,7 +57,13 @@ function CreateArticlePage() {
             {/* Title */}
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Input type="text" id="title" name="title" placeholder="Enter article title" />
+              <Input
+                type="text"
+                id="title"
+                name="title"
+                defaultValue={article.title}
+                placeholder="Enter article title"
+              />
               {formState.errors.title && (
                 <span className="text-red-600 text-sm">{formState.errors.title}</span>
               )}
@@ -62,7 +75,8 @@ function CreateArticlePage() {
               <select
                 id="category"
                 name="category"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2  focus-visible:ring-ring focus-visible:ring-offset-2"
+                defaultValue={article.category}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <option value="">Select Category</option>
                 <option value="education">Education</option>
@@ -95,6 +109,20 @@ function CreateArticlePage() {
             {/* Featured Image */}
             <div className="space-y-2">
               <Label htmlFor="featuredImage">Featured Image</Label>
+              {article.featuredImage && (
+                <div className="mb-4">
+                  <Image
+                    src={article.featuredImage}
+                    alt="Current featured"
+                    width={192}
+                    height={128}
+                    className="object-cover rounded-md"
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Current featured image
+                  </p>
+                </div>
+              )}
               <Input id="featuredImage" name="featuredImage" type="file" accept="image/*" />
               {formState.errors.featuredImage && (
                 <span className="text-red-600 text-sm">{formState.errors.featuredImage}</span>
@@ -124,7 +152,7 @@ function CreateArticlePage() {
             Cancel
           </Button>
           <Button type="submit" form="article-form" disabled={isPending}>
-            {isPending ? "Loading..." : "Publish Article"}
+            {isPending ? "Loading..." : "Edit Article"}
           </Button>
         </CardFooter>
       </Card>
@@ -132,4 +160,4 @@ function CreateArticlePage() {
   );
 }
 
-export default CreateArticlePage;
+export default EditArticlePage;
