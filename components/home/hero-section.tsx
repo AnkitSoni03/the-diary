@@ -36,7 +36,7 @@ const HeroSection = () => {
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300 leading-relaxed md:text-xl">
               Where every story matters and every word counts. Join thousands of
-              readers exploring life's most compelling narratives.
+              readers exploring life&apos;s most compelling narratives.
             </p>
           </div>
 
