@@ -53,7 +53,7 @@ function DashboardSidebar({ closeSheet }: { closeSheet?: () => void }) {
       <div className="flex items-center pb-5">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/new-logo2-removebg-preview.png"
+            src="/the-diary-logo.png"
             alt="The Diary Logo"
             width={80}
             height={60}

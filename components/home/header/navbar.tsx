@@ -30,7 +30,7 @@ function Navbar() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2">
                 <Image
-                  src="/new-logo2-removebg-preview.png"
+                  src="/the-diary-logo.png"
                   alt="The Diary Logo"
                   width={100}
                   height={60}
