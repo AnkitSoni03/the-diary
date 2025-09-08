@@ -14,6 +14,7 @@ const LoadingScreen: React.FC = () => {
         <div className="h-10 w-10 rounded-full bg-yellow-500 shadow-lg shadow-yellow-400/50 animate-bounce" />
       </div>
     </div>
+    
   );
 };
 

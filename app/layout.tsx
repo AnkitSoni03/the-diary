@@ -5,6 +5,7 @@ import { ClerkProvider } from "@/components/providers/ClerkProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import RouteLoader from "@/components/route-loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   title: "The Diary",
   description: "Start sharing your thoughts...!",
   icons: {
-    icon: "/favicon.png",   // yaha public folder ka path dena hai
+    icon: "/favicon.png",
   },
 };
 
@@ -29,15 +30,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Get user data and sync with database
+  // Clerk user sync with Prisma
   const user = await currentUser();
-  
+
   if (user) {
     try {
       const loggedInUser = await prisma.user.findUnique({
         where: { clerkUserId: user.id },
       });
-      
+
       if (!loggedInUser) {
         await prisma.user.create({
           data: {
@@ -64,7 +65,9 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <ClerkProvider>
-            {children}
+            <RouteLoader>
+              {children}
+            </RouteLoader>
           </ClerkProvider>
         </ThemeProvider>
       </body>

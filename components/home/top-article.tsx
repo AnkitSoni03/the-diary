@@ -4,6 +4,27 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 
 export async function TopArticles() {
+  function timeAgo(date: Date) {
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (seconds < 60) return "just now";
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
+
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+
+    const years = Math.floor(months / 12);
+    return `${years} year${years > 1 ? "s" : ""} ago`;
+  }
+
   const articles = await prisma.articles.findMany({
     orderBy: { createdAt: "desc" },
     include: {
@@ -19,7 +40,7 @@ export async function TopArticles() {
       {articles.slice(0, 9).map((article) => (
         <div
           key={article.id}
-          className="group relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-sm transition-all duration-500  border border-gray-100 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-400"
+          className="group relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-sm transition-all duration-500  border border-gray-100 dark:border-gray-800"
         >
           <Link href={`/articles/${article.id}`} className="block h-full">
             {/* Image Container */}
@@ -32,7 +53,7 @@ export async function TopArticles() {
               />
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-              
+
               {/* Category Tag */}
               <div className="absolute top-4 left-4">
                 <span className="bg-amber-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
@@ -51,10 +72,10 @@ export async function TopArticles() {
                 <div className="text-white">
                   <p className="font-medium text-sm">{article.author.name}</p>
                   <p className="text-xs opacity-90">
-                    {new Date(article.createdAt).toLocaleDateString('en-US', { 
-                      month: 'short', 
-                      day: 'numeric',
-                      year: 'numeric'
+                    {new Date(article.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
                     })}
                   </p>
                 </div>
@@ -63,25 +84,27 @@ export async function TopArticles() {
 
             {/* Content */}
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight transition-colors duration-300">
                 {article.title}
               </h3>
-              
+
               {/* Content Preview */}
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed line-clamp-2">
-                {article.content?.replace(/<[^>]*>/g, '').substring(0, 120)}...
+                {article.content?.replace(/<[^>]*>/g, "").substring(0, 120)}...
               </p>
-              
+
               <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                <span className="font-medium">{article.comments?.length || 0} comments</span>
+                <span className="font-medium">
+                  {article.comments?.length || 0} comments
+                </span>
                 <span className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-medium">
-                  6 min read
+                  {timeAgo(new Date(article.createdAt))}
                 </span>
               </div>
             </div>
 
             {/* Bottom accent line */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-orange-500 transform scale-x-0 transition-transform duration-500 origin-left" />
           </Link>
         </div>
       ))}
