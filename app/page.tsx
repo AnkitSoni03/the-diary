@@ -1,7 +1,7 @@
 import { BlogFooter } from "@/components/home/footer";
 import Navbar from "@/components/home/header/navbar";
 import HeroSection from "@/components/home/hero-section";
-import TopArticles from "@/components/home/top-article";
+import {TopArticles} from "@/components/home/top-article";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ export default function Home() {
               Discover our most popular and trending content
             </p>
           </div>
-
+          
           {/* Top Articles */}
           <TopArticles />
 

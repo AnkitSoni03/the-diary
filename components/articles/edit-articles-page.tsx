@@ -46,7 +46,7 @@ function EditArticlePage({ article }: EditPropsPage) {
     <div className="max-w-3xl mx-auto py-10 px-6">
       <Card className="shadow-lg border rounded-2xl">
         <CardHeader className="pb-2">
-          <CardTitle className="text-2xl font-semibold">✍️ Edit Article</CardTitle>
+          <CardTitle className="text-2xl font-bold text-yellow-500">✍️ Edit Article</CardTitle>
           <p className="text-sm text-muted-foreground">
             Update the details below and publish changes.
           </p>

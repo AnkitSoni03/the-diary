@@ -1,25 +1,34 @@
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { Search } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Prisma } from "@prisma/client";
 
-export async function TopArticles() {
-  const articles = await prisma.articles.findMany({
-    orderBy: { createdAt: "desc" },
+type SearchPageProps = {
+  articles: Prisma.ArticlesGetPayload<{
     include: {
-      comments: true,
+      comments: true;
       author: {
-        select: { name: true, email: true, imageUrl: true },
-      },
-    },
-  });
+        select: {
+          name: true;
+          email: true;
+          imageUrl: true;
+        }
+      }
+    }
+  }>[];
+};
 
+export function AllArticlesPage({ articles }: SearchPageProps) {
+  if (articles.length === 0) return <NoSearchResults />;
+  
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
-      {articles.slice(0, 9).map((article) => (
+      {articles.map((article) => (
         <div
           key={article.id}
-          className="group relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-sm transition-all duration-500  border border-gray-100 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-400"
+          className="group relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-sm transition-all duration-500 border border-gray-100 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-400"
         >
           <Link href={`/articles/${article.id}`} className="block h-full">
             {/* Image Container */}
@@ -85,6 +94,26 @@ export async function TopArticles() {
           </Link>
         </div>
       ))}
+    </div>
+  );
+}
+
+export function NoSearchResults() {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 text-center">
+      {/* Icon */}
+      <div className="mb-4 rounded-full bg-muted p-4">
+        <Search className="h-8 w-8 text-muted-foreground" />
+      </div>
+      {/* Title */}
+      <h3 className="text-xl font-semibold text-foreground">
+        No Results Found
+      </h3>
+      {/* Description */}
+      <p className="mt-2 text-muted-foreground">
+        We could not find any articles matching your search. Try a different
+        keyword or phrase.
+      </p>
     </div>
   );
 }

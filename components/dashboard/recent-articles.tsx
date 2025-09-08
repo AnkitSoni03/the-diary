@@ -1,5 +1,5 @@
 "use client";
-import React, { useTransition } from "react";
+import React, { useTransition, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import {
@@ -30,14 +30,25 @@ type RecentArticlesProps = {
 };
 
 const RecentArticles: React.FC<RecentArticlesProps> = ({ articles }) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedArticles = showAll ? articles : articles.slice(0, 5);
+
   return (
     <Card className="mb-8">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Recent Articles</CardTitle>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            View All →
-          </Button>
+          {articles.length > 5 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+              onClick={() => setShowAll((prev) => !prev)}
+            >
+              {showAll ? "Show Less ↑" : "View All →"}
+            </Button>
+          )}
         </div>
       </CardHeader>
       {!articles.length ? (
@@ -55,11 +66,11 @@ const RecentArticles: React.FC<RecentArticlesProps> = ({ articles }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {articles.slice(0, 5).map((article) => (
+              {displayedArticles.map((article) => (
                 <TableRow key={article.id}>
                   <TableCell className="font-medium">{article.title}</TableCell>
                   <TableCell>
-                    <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                    <span className="px-2 py-1 rounded-full text-xs bg-yellow-500 text-white font-bold">
                       Published
                     </span>
                   </TableCell>
