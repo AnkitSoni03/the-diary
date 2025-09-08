@@ -13,12 +13,28 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Articles", href: "/articles" },
+    { name: "About", href: "/about" },
+    { name: "Dashboard", href: "/dashboard" },
+  ];
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" || !navItems.some((item) => item.href === pathname);
+    }
+    return pathname === href;
+  };
 
   return (
     <>
@@ -41,13 +57,17 @@ function Navbar() {
 
             {/* Desktop Navigation - Center */}
             <div className="hidden lg:flex items-center gap-8">
-              {["Articles", "Tutorials", "About", "Dashboard"].map((item) => (
+              {navItems.map((item) => (
                 <Link
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  className="text-sm font-medium text-muted-foreground hover:text-yellow-500 transition-colors"
+                  key={item.name}
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive(item.href)
+                      ? "text-yellow-500"
+                      : "text-muted-foreground hover:text-yellow-500"
+                  }`}
                 >
-                  {item}
+                  {item.name}
                 </Link>
               ))}
             </div>
@@ -139,40 +159,48 @@ function Navbar() {
               {/* Navigation Links */}
               <div className="flex-1 py-20">
                 <div className="space-y-1 px-4">
-                  {["Articles", "Tutorials", "About", "Dashboard"].map(
-                    (item) => (
-                      <Link
-                        key={item}
-                        href={`/${item.toLowerCase()}`}
-                        className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/10 transition-colors"
-                        onClick={closeMobileMenu}
-                      >
-                        {item}
-                      </Link>
-                    )
-                  )}
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                        isActive(item.href)
+                          ? "text-yellow-500 bg-yellow-500/10"
+                          : "text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/10"
+                      }`}
+                      onClick={closeMobileMenu}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
                 </div>
               </div>
 
               {/* Auth Buttons */}
               <div className="p-4 border-t border-yellow-500/40 space-y-3">
-                <SignInButton mode="modal">
-                  <Button
-                    className="w-full hover:text-yellow-500 hover:bg-yellow-500/10 transition"
-                    variant="outline"
-                    onClick={closeMobileMenu}
-                  >
-                    Login
-                  </Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button
-                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:opacity-90 transition"
-                    onClick={closeMobileMenu}
-                  >
-                    Signup
-                  </Button>
-                </SignUpButton>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button
+                      className="w-full hover:text-yellow-500 hover:bg-yellow-500/10 transition"
+                      variant="outline"
+                      onClick={closeMobileMenu}
+                    >
+                      Login
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button
+                      className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:opacity-90 transition"
+                      onClick={closeMobileMenu}
+                    >
+                      Signup
+                    </Button>
+                  </SignUpButton>
+                </SignedOut>
               </div>
             </div>
           </div>
@@ -183,3 +211,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
