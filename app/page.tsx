@@ -48,20 +48,19 @@ export default function Home() {
           {/* Button */}
           <div className="mt-14 text-center">
             <Link href="/articles">
-  <Button
-    size="lg"
-    className="rounded-full px-8 py-3 text-base font-medium
+              <Button
+                size="lg"
+                className="rounded-full px-8 py-3 text-base font-medium
                bg-white text-yellow-500
                dark:bg-black dark:text-yellow-500 
                transition-all duration-300
                hover:bg-yellow-500 hover:text-white
                dark:hover:bg-yellow-500 dark:hover:text-gray-900
                shadow-md hover:shadow-lg"
-  >
-    View All Articles
-  </Button>
-</Link>
-
+              >
+                View All Articles
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
