@@ -19,7 +19,7 @@ export default function Home() {
           <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-amber-400/20 dark:bg-amber-600/10 blur-3xl animate-pulse delay-300" />
         </div>
 
-        <div className="container relative mx-auto px-4">
+        <div className="container relative mx-auto sm:px-4">
           {/* Heading */}
           <div className="mb-14 text-center">
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">

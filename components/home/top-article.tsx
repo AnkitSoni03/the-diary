@@ -40,7 +40,7 @@ export async function TopArticles() {
       {articles.slice(0, 9).map((article) => (
         <div
           key={article.id}
-          className="group relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-sm transition-all duration-500  border border-gray-100 dark:border-gray-800"
+          className="group relative bg-white dark:bg-black sm:rounded-3xl overflow-hidden shadow-sm transition-all duration-500  border border-gray-100 dark:border-gray-800"
         >
           <Link href={`/articles/${article.id}`} className="block h-full">
             {/* Image Container */}
