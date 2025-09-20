@@ -1,5 +1,3 @@
-// import { clerkMiddleware } from '@clerk/nextjs/server';
-
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextRequest } from 'next/server';
 
